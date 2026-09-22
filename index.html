@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti ❤️</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  font-family:Georgia,serif;
+  background:radial-gradient(circle at 50% 45%,#4b0012 0%,#190008 48%,#050005 100%);
+  color:white;display:flex;align-items:center;justify-content:center;
+}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+.card{
+  position:relative;z-index:2;text-align:center;padding:32px 24px;
+  width:min(90%,500px);border:1px solid rgba(255,255,255,.22);
+  border-radius:28px;background:rgba(40,0,12,.38);
+  backdrop-filter:blur(5px);box-shadow:0 0 50px rgba(255,0,60,.2);
+  animation:appear 1.8s ease both;
+}
+.roses{font-size:58px;letter-spacing:7px;filter:drop-shadow(0 0 12px #ff1744);animation:glow 2s infinite alternate}
+h1{font-size:clamp(30px,8vw,52px);margin:15px 0 8px;text-shadow:0 0 18px #ff1744}
+p{font-size:clamp(18px,4.5vw,24px);line-height:1.5;margin:10px 0}
+.small{font-size:14px;opacity:.75;margin-top:20px}
+.heart{position:fixed;z-index:1;bottom:-40px;animation:float linear forwards;pointer-events:none}
+@keyframes float{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+@keyframes appear{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes glow{from{transform:scale(1)}to{transform:scale(1.08)}}
+</style>
+</head>
+<body>
+<canvas id="sparkles"></canvas>
+
+<div class="card">
+  <div class="roses">🌹 🌹 🌹</div>
+  <h1>Para ti ❤️</h1>
+  <p>Hay personas que llegan y hacen que todo se vea un poquito más bonito.</p>
+  <p>Estas flores son para recordarte que alguien está pensando en ti. 🌹</p>
+  <div class="small">Toca la pantalla ✨</div>
+</div>
+
+<script>
+const canvas=document.getElementById("sparkles"),ctx=canvas.getContext("2d");
+let W,H,stars=[];
+function resize(){
+  W=canvas.width=innerWidth*devicePixelRatio;
+  H=canvas.height=innerHeight*devicePixelRatio;
+  canvas.style.width=innerWidth+"px";canvas.style.height=innerHeight+"px";
+  stars=Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+0.4,a:Math.random()}));
+}
+resize();addEventListener("resize",resize);
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  stars.forEach(s=>{
+    s.a+=.025;
+    const alpha=.25+.35*(Math.sin(s.a)+1)/2;
+    ctx.fillStyle=`rgba(255,180,195,${alpha})`;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+function heart(x=Math.random()*innerWidth){
+  const e=document.createElement("div");
+  e.className="heart";
+  e.textContent=["❤️","💖","💕","💗","💘"][Math.floor(Math.random()*5)];
+  e.style.left=x+"px";
+  e.style.fontSize=(18+Math.random()*24)+"px";
+  e.style.animationDuration=(4+Math.random()*5)+"s";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),9500);
+}
+setInterval(()=>heart(),550);
+addEventListener("click",e=>{for(let i=0;i<10;i++)setTimeout(()=>heart(e.clientX+(Math.random()*100-50)),i*60)});
+</script>
+</body>
+</html>
